@@ -5,9 +5,47 @@ import Board from './Board';
 export default function Home() {
 	const [board, setBoard] = useState(createInitialBoard());
 	const [score, setScore] = useState(0);
+    const [isClient, setIsClient] = useState(false)
 
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
+
+    function areArraysEqual(a, b) {
+        
+        console.log(a)
+        console.log(b)
+        // Check if both are arrays
+        if (!Array.isArray(a) || !Array.isArray(b)) {
+          return false;
+        }
+      
+        // Check if arrays have the same length
+        if (a.length !== b.length) {
+          return false;
+        }
+      
+        // Iterate through each element of the arrays
+        for (let i = 0; i < a.length; i++) {
+          // If element is an array, recurse
+          if (Array.isArray(a[i]) && Array.isArray(b[i])) {
+            if (!areArraysEqual(a[i], b[i])) {
+              return false;
+            }
+          } else {
+            // If the element is not an array, check for equality
+            if (a[i] !== b[i]) { 
+                console.log(`${a[i]} - ${b[i]}`)
+              return false;
+            }
+          }
+        }
+      
+        // If no differences were found, arrays are equal
+        return true;
+    }
 	function moveUp() {
-		let newBoard = [...board];
+		let newBoard = JSON.parse(JSON.stringify(board));
 		let scoreToAdd = 0;
 
 		for (let col = 0; col < 4; col++) {
@@ -29,13 +67,13 @@ export default function Home() {
 				newBoard[row][col] = newCol[row]; // Update the board with the new column values
 			}
 		}
-
+        if(areArraysEqual(newBoard, board)) return
 		addNewTile(newBoard);
 		setBoard(newBoard);
 		setScore(score + scoreToAdd);
 	}
 	function moveDown() {
-		let newBoard = [...board];
+		let newBoard = JSON.parse(JSON.stringify(board));
 		let scoreToAdd = 0;
 
 		for (let col = 0; col < 4; col++) {
@@ -57,6 +95,7 @@ export default function Home() {
 				newBoard[row][col] = newCol[row];
 			}
 		}
+        if(areArraysEqual(newBoard, board)) return
 
 		addNewTile(newBoard);
 		setBoard(newBoard);
@@ -64,7 +103,7 @@ export default function Home() {
 	}
 
 	function moveLeft() {
-		let newBoard = [...board];
+		let newBoard = JSON.parse(JSON.stringify(board));
 		let scoreToAdd = 0;
 
 		for (let row = 0; row < 4; row++) {
@@ -82,13 +121,14 @@ export default function Home() {
 			}
 			newBoard[row] = newRow;
 		}
+        if(areArraysEqual(newBoard, board)) return
 
 		addNewTile(newBoard);
 		setBoard(newBoard);
 		setScore(score + scoreToAdd);
 	}
 	function moveRight() {
-		let newBoard = [...board];
+		let newBoard = JSON.parse(JSON.stringify(board));
 		let scoreToAdd = 0;
 
 		for (let row = 0; row < 4; row++) {
@@ -107,6 +147,7 @@ export default function Home() {
 			}
 			newBoard[row] = newRow;
 		}
+        if(areArraysEqual(newBoard, board)) return
 
 		addNewTile(newBoard);
 		setBoard(newBoard);
@@ -169,9 +210,19 @@ export default function Home() {
 		}
 	}
 	return (
-		<main className='flex min-h-screen flex-col items-center justify-between p-24'>
-			<h2>Score: {score}</h2>
-			<Board board={board} />
+		<main className='game-container'>
+			{isClient && <>
+                <header className="header">
+                    <h1 className="title">2048</h1>
+                    <div className="score-container">
+                    <div className="score-box">
+                        <div className="score-label">SCORE</div>
+                        <div className="score-value">{score}</div>
+                    </div>
+                    </div>
+                </header>
+                <Board board={board} />
+            </>}
 		</main>
 	);
 }

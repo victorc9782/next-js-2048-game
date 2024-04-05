@@ -3,7 +3,7 @@ import Tile from './Tile';
 
 function Board({ board }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 100px)', gap: '10px' }}>
+    <div className="board">
       {board.flat().map((value, index) => (
         <Tile key={index} value={value} />
       ))}
