@@ -215,10 +215,8 @@ export default function Home() {
                 <header className="header">
                     <h1 className="title">2048</h1>
                     <div className="score-container">
-                    <div className="score-box">
                         <div className="score-label">SCORE</div>
                         <div className="score-value">{score}</div>
-                    </div>
                     </div>
                 </header>
                 <Board board={board} />
